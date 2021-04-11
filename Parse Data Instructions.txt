@@ -79,4 +79,8 @@ equal, then the script will not function properly.
 Example: 13
 ---------------------------------------------------------------
 
+<<<<<<< HEAD
 Hope this helps!
+=======
+Hope this helps!
+>>>>>>> 59b8131364d88965524444cceea3c767bc9b551f
