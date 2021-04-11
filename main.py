@@ -6,6 +6,7 @@
 import pynput.keyboard
 import sys
 import json
+import time
 import tkinter
 import tkinter.ttk
 import tkinter.filedialog
@@ -43,6 +44,28 @@ class MainWindowClass:
     def run(self):
         self.root.mainloop()
 
+# Typer class
+class Typer:
+    # Initialize
+    def __init__(self):
+        # Create controller
+        self.keyboard = pynput.keyboard.Controller()
+
+    # Send key
+    def send_key(self, key:str): 
+        if len(key) > 1: exec(f"self.keyboard.tap(pynput.keyboard.Key.{key})")
+        else: self.keyboard.tap(key)
+
+    # Hold down key
+    def hold_key(self, key:str):
+        if len(key) > 1: exec(f"self.keyboard.press(pynput.keyboard.Key.{key})")
+        else: self.keyboard.press(key)
+
+    # Release key
+    def release_key(self, key:str):
+        if len(key) > 1: exec(f"self.keyboard.release(pynput.keyboard.Key.{key})")
+        else: self.keyboard.press(key)
+
 # Auto typer Tkinter class
 class AutoTyperTkinter(MainWindowClass):
     # Initialize
@@ -51,6 +74,9 @@ class AutoTyperTkinter(MainWindowClass):
         if "clearing" not in kwargs:
             self.loaded_script = None
             self.text_to_flash = None
+
+            # Create typer class
+            self.typer = Typer()
 
         # Initialize main window class
         super().__init__(**kwargs)
@@ -146,25 +172,36 @@ class AutoTyperTkinter(MainWindowClass):
     def start_script(self, time_until_start:int):
         # Start typing
         def start_typing():
-            try: num_keystrokes = self.loaded_script["metadata"]["Keystrokes"]
+            try: num_commands = self.loaded_script["metadata"]["Commands"]
             except Exception as exception:
                 self.exception_handling(message = "Error: Impropper metadata.", exception = exception)
                 self.menu()
 
-            for current_keystroke in range(num_keystrokes):
+            for current_keystroke in range(num_commands):
                 # Attempt to find 
                 try:
-                    keystroke_data = self.loaded_script["keystrokes"][f"{current_keystroke + 1}"]                    
+                    keystroke_data = self.loaded_script["keystrokes"][f"{current_keystroke + 1}"]       
+
+                    # Do the stuff!
+                    try: exec(f"self.typer.{keystroke_data['mode']}(\"{keystroke_data['key']}\")")
+                    except Exception as exception:
+                        self.exception_handling(message = "Error: Failed to send keystroke.", exception = exception)
+                        self.menu()
+
+                    # Wait
+                    time.sleep((keystroke_data["delay_next_key"] // 1000))
 
                 # Could not find
                 except Exception as exception:
                     self.exception_handling(message = "Error: Could not find keystroke.", exception = exception)
                     self.menu()
-                    
+
         # Check if the script is valid
         if (self.loaded_script is not None):
             # Wait seconds
-            self.root.after((time_until_start * 1000), start_typing)
+            # self.root.after((time_until_start * 1000), start_typing)
+            time.sleep(int(time_until_start))
+            start_typing()
         
         # Script is not valid
         else:

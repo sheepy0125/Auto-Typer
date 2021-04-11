@@ -1,0 +1,82 @@
+Parse data instructions
+
+Some important things:
+1. The data will be stored in JSON with no comments
+2. The indent for the data will be 4
+3. If there is anything wrong with the script, then it will not run properly.
+
+Tree:
+"""
+keystrokes
+    number:str
+        key:str
+        mode:str
+        delay_next_key:int
+
+metadata
+    Title:str
+    Description:str
+    Commands:int
+    Author:str
+"""
+
+What do these mean?
+---------------------------------------------------------------
+number: Command ID
+(INTEGER)
+
+Counts up from one.
+
+Example: "8"
+---------------------------------------------------------------
+key: Key to send
+(STRING)
+
+If it is one character, then it will be handled normally. If it
+is more than one character, it will be handled as a special 
+character.
+
+Example #1: "W"     (normal)
+Example #2: "space" (special)
+Example #3: "esc"   (special)
+---------------------------------------------------------------
+mode: What method to use
+(STRING)
+
+The mode will be the same as the method used in the auto typer
+class. The methods that can be used are:
+* send_key    (Just tap a key)
+* hold_key    (Hold down a key)
+* release_key (Release a key)
+
+Example: "send_key"
+---------------------------------------------------------------
+delay_next_key: How many milliseconds to wait until next key
+(INTEGER)
+
+Example: 1000
+---------------------------------------------------------------
+Title: Title of the script
+(STRING)
+
+This is what will be showed when the user loads the script.
+
+Example: "Hello, World!"
+---------------------------------------------------------------
+Description: Description of the script
+(STRING)
+
+This is what will be showed when the user loads the script.
+
+Example: "Types out \"Hello, World!\""
+---------------------------------------------------------------
+Commands: How many commands in total to send
+(INTEGER)
+
+Must be the same as how many commands there are. If it is not
+equal, then the script will not function properly.
+
+Example: 13
+---------------------------------------------------------------
+
+Hope this helps!
