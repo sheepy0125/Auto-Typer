@@ -46,15 +46,31 @@ class AutoTyper(MainWindowClass):
     # Initialize
     def __init__(self, **kwargs):
         # Setup variables
-        self.loaded_script = None
+        if "clearing" not in kwargs:
+            self.loaded_script = None
+            self.text_to_flash = None
 
         # Initialize main window class
         super().__init__(**kwargs)
 
+    # Footer
+    def footer_gui(self, show_menu_button:bool = True):
+        # Flashed text
+        if self.text_to_flash is not None: 
+            tkinter.Label(master = self.root, text = f"{self.text_to_flash}").place(relx = 0.5, rely = (0.8 if show_menu_button else 0.875), anchor = tkinter.CENTER)
+            # Reset for next page
+            self.text_to_flash = None
+
+        # Credits
+        tkinter.Label(master = self.root, text = "Created by sheepy0125.").place(relx = 0.5, rely = (0.875 if show_menu_button else 0.95), anchor = tkinter.CENTER)
+
+        # Menu button at bottom
+        if show_menu_button:
+            tkinter.Button(master = self.root, text = "Menu", width = self.widget_width, height = self.widget_height, command = self.menu).place(relx = 0.5, rely = 0.95, anchor = tkinter.CENTER)
+
     # Menu screen
-    def menu(self, text_to_flash:str = None):
+    def menu(self):
         self.clear_win()
-        sec_to_wait = tkinter.IntVar(master = self.root)
 
         # GUI
         tkinter.Label(master = self.root, text = "Welcome to Sheepy's Auto Typer!").pack()
@@ -63,9 +79,12 @@ class AutoTyper(MainWindowClass):
         tkinter.Button(master = self.root, text = "Create a script", width = self.widget_width, height = self.widget_height, command = self.create_script).pack(pady = 8)
         tkinter.Button(master = self.root, text = "Load a script", width = self.widget_width, height = self.widget_height, command = self.load_script).pack(pady = 8)
         tkinter.ttk.Separator(master = self.root, orient = "horizontal").pack(pady = 8, padx = self.margin_size, fill = "x")
-        tkinter.Button(master = self.root, text = "Start script", width = self.widget_width, height = self.widget_height, command = lambda: self.start_script(loaded_script, sec_to_wait.get())).pack(pady = 8)
+        tkinter.Button(master = self.root, text = "Start script", width = self.widget_width, height = self.widget_height, command = lambda: self.start_script(self.loaded_script, sec_to_wait.get())).pack(pady = 8)
         tkinter.Label(master = self.root, text = "Seconds until start typing").pack()
-        sec_to_wait = tkinter.Spinbox(master = self.root, width = self.widget_width, justify = tkinter.CENTER, from_ = 0, to = 120).pack(pady = 0)
+        sec_to_wait = tkinter.Spinbox(master = self.root, width = self.widget_width, justify = tkinter.CENTER, from_ = 0, to = 120)
+        sec_to_wait.pack(pady = 0)
+
+        self.footer_gui(show_menu_button = False)
 
     # Create script
     def create_script(self):
@@ -74,12 +93,16 @@ class AutoTyper(MainWindowClass):
         # GUI
         tkinter.Label(master = self.root, text = "Creating a script").pack()
 
+        self.footer_gui()
+
     # Load script
     def load_script(self):
         self.clear_win()
 
         # GUI
         tkinter.Label(master = self.root, text = "Loading a script").pack()
+
+        self.footer_gui()
 
     # Starting script
     def start_script(self, script_to_start:str, time_until_start:int):
@@ -90,7 +113,8 @@ class AutoTyper(MainWindowClass):
 
         # Script is not valid
         else:
-            self.menu(text_to_flash = "Can not start empty script!")
+            self.text_to_flash = "Can not start empty script!"
+            self.menu()
 
 auto_typer_win = AutoTyper(win_title = "Sheepy's Auto Typer Program!", win_size = (500, 500), win_resizable = False)
 auto_typer_win.menu()
