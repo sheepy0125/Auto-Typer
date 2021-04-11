@@ -1,0 +1,63 @@
+
+{
+    "keystrokes": {
+        "1": {
+            "key": "H",
+            "delay_next_key": 1
+        },
+        "2": {
+            "key": "e",
+            "delay_next_key": 1
+        },
+        "3": {
+            "key": "l",
+            "delay_next_key": 1
+        },
+        "4": {
+            "key": "l",
+            "delay_next_key": 1
+        },
+        "5": {
+            "key": "o",
+            "delay_next_key": 1
+        },
+        "6": {
+            "key": ",",
+            "delay_next_key": 0
+        },
+        "7": {
+            "key": "space",
+            "delay_next_key": 1
+        },
+        "8": {
+            "key": "W",
+            "delay_next_key": 1
+        },
+        "9": {
+            "key": "o",
+            "delay_next_key": 1
+        },
+        "10": {
+            "key": "r",
+            "delay_next_key": 1
+        },
+        "11": {
+            "key": "l",
+            "delay_next_key": 1
+        },
+        "12": {
+            "key": "d",
+            "delay_next_key": 1
+        },
+        "13": {
+            "key": "!",
+            "delay_next_key": 1
+        }
+    },
+    "metadata": {
+        "title": "Hello, World!",
+        "description": "Types out \"Hello, World!\"",
+        "total_chars": 13,
+        "author": "sheepy0125"
+    }
+}

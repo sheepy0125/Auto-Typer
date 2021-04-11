@@ -5,8 +5,10 @@
 # Import
 import pynput
 import sys
+import json
 import tkinter
 import tkinter.ttk
+import tkinter.filedialog
 
 # Main window class (boilerplate code)
 class MainWindowClass:
@@ -97,12 +99,20 @@ class AutoTyper(MainWindowClass):
 
     # Load script
     def load_script(self):
-        self.clear_win()
+        # Exception handling
+        def exception_occured(exception):
+            self.text_to_flash = f"There was an error parsing the JSON data. Error: {exception}"
+            self.menu()
 
-        # GUI
-        tkinter.Label(master = self.root, text = "Loading a script").pack()
+        try:
+            file_to_open = tkinter.filedialog.askopenfilename(initialdir = "D:\Code\Python\Auto Typer", title = "Select script to load", filetypes = (("JSON files","*.json"), ("All of the files", "*.*")))
+            self.text_to_flash = f"Loaded file \"{file_to_open}\""
 
-        self.footer_gui()
+            with open (file_to_open) as script_file:
+                self.loaded_script = json.load(script_file)
+                                
+        # Error occured
+        except Exception as exception: exception_occured(exception)
 
     # Starting script
     def start_script(self, script_to_start:str, time_until_start:int):
