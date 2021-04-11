@@ -110,7 +110,19 @@ class AutoTyper(MainWindowClass):
 
             with open (file_to_open) as script_file:
                 self.loaded_script = json.load(script_file)
-                                
+
+            # GUI
+            tkinter.ttk.Separator(master = self.root, orient = "horizontal").pack(pady = 8, padx = self.margin_size, fill = "x")
+            tkinter.Label(master = self.root, text = "Metadata").pack()
+            metadata_text = tkinter.Text(master = self.root, height = 4, width = self.widget_width)
+            metadata_text.pack()
+
+            for metadata_item in self.loaded_script["metadata"].items():
+                metadata_text.insert(tkinter.END, f"{metadata_item[0]}: {metadata_item[1]}\n")
+
+            metadata_text.config(state = tkinter.DISABLED)
+            self.footer_gui(show_menu_button = False)
+
         # Error occured
         except Exception as exception: exception_occured(exception)
 
