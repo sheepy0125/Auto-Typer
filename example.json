@@ -55,9 +55,9 @@
         }
     },
     "metadata": {
-        "title": "Hello, World!",
-        "description": "Types out \"Hello, World!\"",
-        "total_chars": 13,
-        "author": "sheepy0125"
+        "Title": "Hello, World!",
+        "Description": "Types out \"Hello, World!\"",
+        "Keystrokes": 13,
+        "Author": "sheepy0125"
     }
 }

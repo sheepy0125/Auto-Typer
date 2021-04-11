@@ -3,7 +3,7 @@
 # --------------------------------- #
 
 # Import
-import pynput
+import pynput.keyboard
 import sys
 import json
 import tkinter
@@ -43,8 +43,8 @@ class MainWindowClass:
     def run(self):
         self.root.mainloop()
 
-# Auto typer class
-class AutoTyper(MainWindowClass):
+# Auto typer Tkinter class
+class AutoTyperTkinter(MainWindowClass):
     # Initialize
     def __init__(self, **kwargs):
         # Setup variables
@@ -54,6 +54,17 @@ class AutoTyper(MainWindowClass):
 
         # Initialize main window class
         super().__init__(**kwargs)
+
+    # Exception handling
+    def exception_handling(self, message:str = None, exception:str = None):
+        self.text_to_flash = ""
+
+        if message is not None: self.text_to_flash += f"{message}"
+        if exception is not None: self.text_to_flash += f" Information: \"{type(exception).__name__}: {exception}\""
+
+        if self.text_to_flash == "": self.text_to_flash = "There was an error, but no information was given on why. I have no clue either."
+
+        print(self.text_to_flash)
 
     # Footer
     def footer_gui(self, show_menu_button:bool = True):
@@ -81,7 +92,7 @@ class AutoTyper(MainWindowClass):
         tkinter.Button(master = self.root, text = "Create a script", width = self.widget_width, height = self.widget_height, command = self.create_script).pack(pady = 8)
         tkinter.Button(master = self.root, text = "Load a script", width = self.widget_width, height = self.widget_height, command = self.load_script).pack(pady = 8)
         tkinter.ttk.Separator(master = self.root, orient = "horizontal").pack(pady = 8, padx = self.margin_size, fill = "x")
-        tkinter.Button(master = self.root, text = "Start script", width = self.widget_width, height = self.widget_height, command = lambda: self.start_script(self.loaded_script, sec_to_wait.get())).pack(pady = 8)
+        tkinter.Button(master = self.root, text = "Start script", width = self.widget_width, height = self.widget_height, command = lambda: self.start_script(sec_to_wait.get())).pack(pady = 8)
         tkinter.Label(master = self.root, text = "Seconds until start typing").pack()
         sec_to_wait = tkinter.Spinbox(master = self.root, width = self.widget_width, justify = tkinter.CENTER, from_ = 0, to = 120)
         sec_to_wait.pack(pady = 0)
@@ -99,11 +110,6 @@ class AutoTyper(MainWindowClass):
 
     # Load script
     def load_script(self):
-        # Exception handling
-        def exception_occured(exception):
-            self.text_to_flash = f"There was an error parsing the JSON data. Error: {exception}"
-            self.menu()
-
         try:
             file_to_open = tkinter.filedialog.askopenfilename(initialdir = "D:\Code\Python\Auto Typer", title = "Select script to load", filetypes = (("JSON files","*.json"), ("All of the files", "*.*")))
             self.text_to_flash = f"Loaded file \"{file_to_open}\""
@@ -112,32 +118,59 @@ class AutoTyper(MainWindowClass):
                 self.loaded_script = json.load(script_file)
 
             # GUI
-            tkinter.ttk.Separator(master = self.root, orient = "horizontal").pack(pady = 8, padx = self.margin_size, fill = "x")
-            tkinter.Label(master = self.root, text = "Metadata").pack()
+            # If there is already an existing GUI, nope it.
+            try: 
+                for widget in self.widget_list: widget.destroy()
+            except Exception: pass
+
+            metadata_sep = tkinter.ttk.Separator(master = self.root, orient = "horizontal")
+            metadata_sep.pack(pady = 8, padx = self.margin_size, fill = "x")
+
+            # Metadata
+            metadata_label = tkinter.Label(master = self.root, text = "Metadata")
+            metadata_label.pack()
             metadata_text = tkinter.Text(master = self.root, height = 4, width = self.widget_width)
             metadata_text.pack()
-
-            for metadata_item in self.loaded_script["metadata"].items():
-                metadata_text.insert(tkinter.END, f"{metadata_item[0]}: {metadata_item[1]}\n")
-
+            for metadata_item in self.loaded_script["metadata"].items(): metadata_text.insert(tkinter.END, f"{metadata_item[0]}: {metadata_item[1]}\n")
             metadata_text.config(state = tkinter.DISABLED)
-            self.footer_gui(show_menu_button = False)
+
+            self.widget_list = [metadata_sep, metadata_label, metadata_text]
 
         # Error occured
-        except Exception as exception: exception_occured(exception)
+        except Exception as exception:
+            self.exception_handling(message = "There was an error parsing the JSON data.", exception = exception)
+            self.loaded_script = None
+            self.menu()
 
     # Starting script
-    def start_script(self, script_to_start:str, time_until_start:int):
-        # Check if the script is valid
-        if (script_to_start is not None):
-            # TODO: wait and tell how much time is left (progress bar if possible? idk how tkinter works)
-            pass
+    def start_script(self, time_until_start:int):
+        # Start typing
+        def start_typing():
+            try: num_keystrokes = self.loaded_script["metadata"]["Keystrokes"]
+            except Exception as exception:
+                self.exception_handling(message = "Error: Impropper metadata.", exception = exception)
+                self.menu()
 
+            for current_keystroke in range(num_keystrokes):
+                # Attempt to find 
+                try:
+                    keystroke_data = self.loaded_script["keystrokes"][f"{current_keystroke + 1}"]                    
+
+                # Could not find
+                except Exception as exception:
+                    self.exception_handling(message = "Error: Could not find keystroke.", exception = exception)
+                    self.menu()
+                    
+        # Check if the script is valid
+        if (self.loaded_script is not None):
+            # Wait seconds
+            self.root.after((time_until_start * 1000), start_typing)
+        
         # Script is not valid
         else:
             self.text_to_flash = "Can not start empty script!"
             self.menu()
 
-auto_typer_win = AutoTyper(win_title = "Sheepy's Auto Typer Program!", win_size = (500, 500), win_resizable = False)
+auto_typer_win = AutoTyperTkinter(win_title = "Sheepy's Auto Typer Program!", win_size = (500, 500), win_resizable = False)
 auto_typer_win.menu()
 auto_typer_win.run()
