@@ -32,9 +32,9 @@ Example: "8"
 key: Key to send
 (STRING)
 
-If it is less than one character, then it will be handled
-normally. If it is more than one character, it will be
-handled as a special character.
+If it is one character, then it will be handled normally. If it
+is more than one character, it will be handled as a special 
+character.
 
 Example #1: "W"     (normal)
 Example #2: "space" (special)
