@@ -3,27 +3,27 @@
         "1": {
             "key": "H",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "2": {
             "key": "e",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "3": {
             "key": "l",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "4": {
             "key": "l",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "5": {
             "key": "o",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "6": {
             "key": ",",
@@ -33,32 +33,32 @@
         "7": {
             "key": "space",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "8": {
             "key": "W",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "9": {
             "key": "o",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "10": {
             "key": "r",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "11": {
             "key": "l",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "12": {
             "key": "d",
             "mode": "send_key",
-            "delay_next_key": 1000
+            "delay_next_key": 1
         },
         "13": {
             "key": "!",
